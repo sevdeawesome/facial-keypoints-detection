@@ -1,4 +1,5 @@
-# Model: Pytorch and timm
+#IMPORTS FOR ALL NOTEBOOKS
+#Model: Pytorch and timm
 from timm import *
 import timm
 
@@ -72,7 +73,7 @@ and a validation set (X,Y)
 usage: 
 X_train, Y_train, X_val, Y_val = create_train_test_sets(df)
 '''
-def create_train_test_sets(training_df, test_size=.2):
+def create_train_test_sets(training_df, test_size=.2, normalize=False):
     
     independent_variable_images = []
     for i in range(len(training_df)):
@@ -94,28 +95,5 @@ def create_train_test_sets(training_df, test_size=.2):
     Y_val = dependent_vars[train_size:]
     
     return X_train, Y_train, X_val, Y_val
-
-def create_train_test_sets_nchw(training_df, test_size=.2):
-    
-    independent_variable_images = []
-    for i in range(len(training_df)):
-        independent_variable_images.append(get_image_arr(training_df, i))
-    image_list = np.array(independent_variable_images,dtype = 'float')
-    independent_vars = image_list.reshape(-1,96,96,1) #! Optimize
-    
-
-    dependent_vars = training_df.iloc[:,0:30]
-    dependent_vars = dependent_vars.to_numpy()
-    
-    test_size = int(test_size * len(training_df))
-    train_size = len(training_df) - test_size
-
-    # create the training and test sets
-    X_train = tensor(independent_vars[:train_size])
-    Y_train = tensor(dependent_vars[:train_size])
-    X_val = tensor(independent_vars[train_size:])
-    Y_val = tensor(dependent_vars[train_size:])
-    X_train = X_train.permute(0, 3, 1, 2)
-    X_val = X_val.permute(0, 3, 1, 2)
-    
-    return X_train, Y_train, X_val, Y_val
+    if normalize: 
+            return X_train/255, Y_train/255, X_val/255, Y_val/255

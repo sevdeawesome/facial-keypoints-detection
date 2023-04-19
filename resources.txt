@@ -1,0 +1,1 @@
+pip install fastkaggle kaggle timm fastai torch scikit-learn pandas numpy matplotlib seaborn opencv-python
